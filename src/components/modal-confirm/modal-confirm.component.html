@@ -1,0 +1,21 @@
+<div class="">
+  <div mat-dialog-content class="p-6 text-center">
+    <!-- Icon -->
+    <span
+      class="mb-4 inline-flex justify-center items-center h-[62px] w-[62px] rounded-full border-4 border-yellow-50 bg-yellow-100 text-yellow-500"
+    >
+      <mat-icon>warning</mat-icon>
+    </span>
+    <!-- End Icon -->
+
+    <h3 class="mb-2 text-2xl font-bold text-gray-800">Sign out</h3>
+    <p class="text-gray-500">
+      Are you sure you would like to sign out of your Preline account?
+    </p>
+  </div>
+
+  <mat-dialog-actions align="center" class="mt-4 gap-4">
+    <button mat-button color="warn" (click)="onConfirm()">Sign out</button>
+    <button mat-button color="primary" (click)="onCancel()">Cancel</button>
+  </mat-dialog-actions>
+</div>
