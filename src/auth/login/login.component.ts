@@ -1,25 +1,20 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [ReactiveFormsModule, CommonModule], // Tambahkan HttpClientModule di sini
-  providers: [],
+  imports: [ReactiveFormsModule, CommonModule, MatProgressSpinnerModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  isSubmitting = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,8 +22,8 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['zenduser@gmail.com', [Validators.required, Validators.email]],
+      password: ['password123', [Validators.required, Validators.minLength(8)]],
       rememberMe: [false],
     });
   }
@@ -36,14 +31,13 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.invalid) return;
 
-    this.isSubmitting = true;
+    this.isLoading = true; // Tampilkan spinner saat loading
     const { email, password, rememberMe } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.isSubmitting = false;
+        this.isLoading = false; // Sembunyikan spinner setelah login berhasil
         this.router.navigate(['/dashboard']);
-        
 
         if (rememberMe) {
           localStorage.setItem('rememberedUser', JSON.stringify({ email }));
@@ -51,7 +45,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Login failed', err);
-        this.isSubmitting = false;
+        this.isLoading = false; // Sembunyikan spinner saat terjadi error
       },
     });
   }
