@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
+  errMessage: string;
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +46,8 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Login failed', err);
+        this.errMessage = err.error.message;
+        console.error('ini error nya: ', err.error.message);
         this.isLoading = false; // Sembunyikan spinner saat terjadi error
       },
     });
