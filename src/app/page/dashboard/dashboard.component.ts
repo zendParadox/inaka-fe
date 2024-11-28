@@ -19,11 +19,11 @@ export class DashboardComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        // localStorage.removeItem('accessToken');
+        localStorage.removeItem('accessToken');
         // Redirect atau lakukan tindakan lain setelah logout
 
         // Hapus localStorage
-        localStorage.clear();
+        // localStorage.clear();
 
         // Refresh halaman
         window.location.reload();

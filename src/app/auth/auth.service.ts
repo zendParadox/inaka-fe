@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, finalize, BehaviorSubject } from 'rxjs';
+import {
+  Observable,
+  tap,
+  finalize,
+  BehaviorSubject,
+  catchError,
+  throwError,
+} from 'rxjs';
+import { environment } from '../../../environtments/environtment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
@@ -23,17 +31,24 @@ export class AuthService {
     return localStorage.getItem('accessToken') ?? '';
   }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string, token: string): Observable<any> {
     this.loadingSubject.next(true);
     return this.http
-      .post<any>(this.apiUrl + '/login', { email, password })
+      .post<any>(`${this.apiUrl}/login`, {
+        email,
+        password,
+        recaptcha: token,
+      }) // Kirim token sebagai 'recaptcha'
       .pipe(
         tap((response) => {
-          // Simpan token di local storage
           if (response.accessToken) {
             console.log('response: ', response);
             localStorage.setItem('accessToken', response.accessToken);
           }
+        }),
+        catchError((err) => {
+          console.error('Login error:', err);
+          return throwError(err);
         }),
         finalize(() => {
           this.loadingSubject.next(false);
