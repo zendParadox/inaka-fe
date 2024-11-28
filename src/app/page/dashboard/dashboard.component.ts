@@ -24,7 +24,6 @@ export class DashboardComponent {
 
         // Hapus localStorage
         // localStorage.clear();
-        // cek global github
         // Refresh halaman
         window.location.reload();
       }
